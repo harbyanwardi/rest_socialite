@@ -118,7 +118,7 @@ class UserController extends Controller
         return response()->json(['success'=>$success], $this->successStatus);
     }
 
-    public function details()
+    public function details(Request $request)
     {
         $user = Auth::user();
         return response()->json([
