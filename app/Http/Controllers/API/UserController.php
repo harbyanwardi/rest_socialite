@@ -18,16 +18,24 @@ class UserController extends Controller
     public function login(Request $request){
         if(Auth::attempt(['email' => request('email'), 'password' => request('password')])){
             $user = Auth::user();
-            $success['token'] =  $user->createToken('nApp')->accessToken;
-            return response()->json([
-                    'statusCode' => 200,
-                    'data'=>$success
-                ], $this->successStatus);
+            if($user->status == 'inactive') {
+                return response()->json([
+                'statusCode' => 401,
+                'error'=>'Upps , Your account is inactive'], 401);
+            }
+            else{
+                $success['token'] =  $user->createToken('nApp')->accessToken;
+                return response()->json([
+                        'statusCode' => 200,
+                        'data'=>$success
+                    ], $this->successStatus);
+            }
+            
         }
         else{
             return response()->json([
                 'statusCode' => 401,
-                'error'=>'Unauthorised'], 401);
+                'error'=>'Unauthorized'], 401);
         }
     }
 
@@ -120,10 +128,30 @@ class UserController extends Controller
 
     public function details(Request $request)
     {
+
         $user = Auth::user();
         return response()->json([
         	'statusCode' => 200,
         	'data' => $user], 
         	$this->successStatus);
+    }
+
+    public function logout(Request $request)
+    {
+        $user = Auth::user()->token();
+        $user->revoke();
+        return response()->json([
+            'statusCode' => 200,
+            'data' => 'Success Logout'], 
+            $this->successStatus);
+    }
+
+    public function loginfalse(Request $request, $msg)
+    {
+        
+        return response()->json([
+            'statusCode' => 401,
+            'error' => $msg], 
+            401);
     }
 }

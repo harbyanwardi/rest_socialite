@@ -19,12 +19,16 @@ use App\Http\Controllers\API\UserController;
 
 Route::post('login', [UserController::class, 'login']);
 Route::post('register', [UserController::class, 'register']);
+Route::get('loginfalse/{msg}', [UserController::class, 'loginfalse']);
+
 Route::get('auth/{provider}/callback', [UserController::class, 'handleProviderCallback']);
+
 
 // Route::middleware('auth:api')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
 Route::group(['middleware' => 'auth:api'], function(){
 	Route::get('details', [UserController::class, 'details']);
+	Route::post('logout', [UserController::class, 'logout']);
 
 });
