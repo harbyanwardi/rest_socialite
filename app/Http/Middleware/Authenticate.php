@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
+use App\Models\oauth_access_token;
 use Carbon\Carbon;
 
 class Authenticate extends Middleware
@@ -15,14 +16,15 @@ class Authenticate extends Middleware
      */
     protected function redirectTo($request)
     {
+
         if (! $request->expectsJson()) {
            
-            $msg = 'Token invalid';
+            $msg = 'Token invalid , Please Relogin';
 
-         
+           
             return 'api/loginfalse/'.$msg;
         }
     }
 
-  
+    
 }
